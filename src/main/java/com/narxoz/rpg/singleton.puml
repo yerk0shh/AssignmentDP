@@ -1,0 +1,26 @@
+@startuml
+
+class BattleEngine {
+
+    - static BattleEngine instance
+    - Random random
+
+    - BattleEngine()
+
+    + getInstance() : BattleEngine
+    + setRandomSeed(seed : long) : BattleEngine
+    + runEncounter(teamA, teamB) : EncounterResult
+    + reset() : void
+}
+
+class EncounterResult {
+    - winner : String
+    - rounds : int
+
+    + getWinner() : String
+    + getRounds() : int
+}
+
+BattleEngine --> EncounterResult
+
+@enduml

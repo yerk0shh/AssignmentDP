@@ -1,0 +1,32 @@
+@startuml
+
+interface Combatant {
+    + getName() : String
+    + getAttackPower() : int
+    + takeDamage(damage : int)
+    + isAlive() : boolean
+}
+
+class HeroCombatantAdapter {
+    - hero : GameCharacter
+    - health : int
+}
+
+class EnemyCombatantAdapter {
+    - enemy : Enemy
+    - health : int
+}
+
+class GameCharacter
+class Enemy
+class BattleEngine
+
+Combatant <|.. HeroCombatantAdapter
+Combatant <|.. EnemyCombatantAdapter
+
+HeroCombatantAdapter --> GameCharacter
+EnemyCombatantAdapter --> Enemy
+
+BattleEngine --> Combatant
+
+@enduml
