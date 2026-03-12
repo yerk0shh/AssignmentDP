@@ -34,7 +34,6 @@ public abstract class BaseCharacter implements GameCharacter {
             System.out.println("Armor: " + armor.getArmorInfo());
     }
 
-    // -------- ДОБАВЬ ЭТИ МЕТОДЫ --------
 
     @Override
     public String getName() {
@@ -46,7 +45,7 @@ public abstract class BaseCharacter implements GameCharacter {
         int weaponBonus = 0;
 
         if (weapon != null) {
-            weaponBonus = 5; // можно сделать позже через weapon.getDamage()
+            weaponBonus = 5;
         }
 
         return strength + weaponBonus;

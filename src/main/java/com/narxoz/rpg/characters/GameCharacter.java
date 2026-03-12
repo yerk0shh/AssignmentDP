@@ -10,7 +10,8 @@ public interface GameCharacter {
 
     void equip(EquipmentFactory factory);
 
-    // --- методы для боевой системы ---
+    // методы для боевой системы
+
     String getName();
 
     int getAttack();
