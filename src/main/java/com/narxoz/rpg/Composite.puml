@@ -1,0 +1,26 @@
+@startuml CompositePattern
+
+title Composite Pattern - Raid Team Structure
+
+interface CombatNode {
+    +getAttackPower(): int
+    +takeDamage(amount: int)
+    +isAlive(): boolean
+    +printTree(indent: String)
+}
+
+class HeroUnit
+class EnemyUnit
+
+class PartyComposite
+class RaidGroup
+
+CombatNode <|.. HeroUnit
+CombatNode <|.. EnemyUnit
+CombatNode <|.. PartyComposite
+CombatNode <|.. RaidGroup
+
+PartyComposite "1" *-- "many" CombatNode
+RaidGroup "1" *-- "many" CombatNode
+
+@enduml

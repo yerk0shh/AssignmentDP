@@ -1,85 +1,56 @@
 package com.narxoz.rpg;
 
-import com.narxoz.rpg.adapter.*;
-import com.narxoz.rpg.battle.*;
-import com.narxoz.rpg.characterfactory.*;
-import com.narxoz.rpg.characters.GameCharacter;
-import com.narxoz.rpg.builder.*;
-import com.narxoz.rpg.enemy.Enemy;
-import com.narxoz.rpg.factory.EnemyComponentFactory;
-import com.narxoz.rpg.factory.FireComponentFactory;
-import com.narxoz.rpg.factory.IceComponentFactory;
-
-import java.util.*;
+import com.narxoz.rpg.characters.*;
+import com.narxoz.rpg.composite.*;
+import com.narxoz.rpg.bridge.*;
+import com.narxoz.rpg.bridge.effects.*;
+import com.narxoz.rpg.raid.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("===== RPG BATTLE DEMO =====");
+        // Heroes
+        HeroUnit warrior = new HeroUnit(new Warrior());
+        HeroUnit mage = new HeroUnit(new Mage());
+        HeroUnit archer = new HeroUnit(new Archer());
 
-        BattleEngine engine1 = BattleEngine.getInstance();
-        BattleEngine engine2 = BattleEngine.getInstance();
+        // Enemies
+        EnemyUnit goblin = new EnemyUnit(new Warrior());
+        EnemyUnit orc = new EnemyUnit(new Archer());
 
-        System.out.println("Same BattleEngine instance: "
-                + (engine1 == engine2));
+        // Party
+        PartyComposite heroParty = new PartyComposite();
+        heroParty.add(warrior);
+        heroParty.add(mage);
+        heroParty.add(archer);
 
-        CharacterCreator warriorCreator =
-                new WarriorCreator();
-        GameCharacter warrior =
-                warriorCreator.createCharacter();
+        PartyComposite enemyParty = new PartyComposite();
+        enemyParty.add(goblin);
+        enemyParty.add(orc);
 
-        CharacterCreator mageCreator =
-                new MageCreator();
-        GameCharacter mage =
-                mageCreator.createCharacter();
+        // RaidGroup (nested composite)
+        RaidGroup raid = new RaidGroup();
+        raid.add(heroParty);
 
-        EnemyDirector director = new EnemyDirector();
+        System.out.println("**** RAID STRUCTURE ****");
+        raid.printTree("");
 
-        /* FACTORIES (Elements) */
-        EnemyComponentFactory fireFactory =
-                new FireComponentFactory();
+        // Bridge demo
+        Skill fireball = new AreaSkill(new FireEffect());
+        Skill iceStrike = new SingleTargetSkill(new IceEffect());
 
-        EnemyComponentFactory iceFactory =
-                new IceComponentFactory();
+        fireball.use(enemyParty, 20);
+        iceStrike.use(orc, 15);
 
-        EnemyBuilder minionBuilder =
-                new BasicEnemyBuilder();
+        // Raid battle
+        RaidEngine engine = new RaidEngine();
 
-        EnemyBuilder bossBuilder =
-                new BossEnemyBuilder();
+        RaidResult result = engine.runRaid(heroParty, enemyParty);
 
-        Enemy goblin =
-                director.createMinion(
-                        minionBuilder,
-                        iceFactory);
-
-        Enemy dragon =
-                director.createRaidBoss(
-                        bossBuilder,
-                        fireFactory);
-
-        List<Combatant> heroes = new ArrayList<>();
-        heroes.add(new HeroCombatantAdapter(warrior));
-        heroes.add(new HeroCombatantAdapter(mage));
-
-        List<Combatant> enemies = new ArrayList<>();
-        enemies.add(new EnemyCombatantAdapter(goblin));
-        enemies.add(new EnemyCombatantAdapter(dragon));
-
-
-        BattleEngine engine =
-                BattleEngine.getInstance()
-                        .setRandomSeed(42);
-
-        EncounterResult result =
-                engine.runEncounter(
-                        heroes,
-                        enemies
-                );
-
-
-        System.out.println("\n===== BATTLE RESULT =====");
-        System.out.println(result);
+        System.out.println("\n**** RAID RESULT ****");
+        result.printLog();
+        System.out.println("Winner: " + result.getWinner());
+        System.out.println("Rounds: " + result.getRounds());
     }
 }

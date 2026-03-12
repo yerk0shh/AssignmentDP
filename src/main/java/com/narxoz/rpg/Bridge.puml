@@ -1,0 +1,33 @@
+@startuml BridgePattern
+
+title Bridge Pattern - Skill and Effect System
+
+interface EffectImplementor {
+    +applyEffect(target: CombatNode, power: int)
+}
+
+class PhysicalEffect
+class FireEffect
+class IceEffect
+class ShadowEffect
+
+EffectImplementor <|.. PhysicalEffect
+EffectImplementor <|.. FireEffect
+EffectImplementor <|.. IceEffect
+EffectImplementor <|.. ShadowEffect
+
+
+abstract class Skill {
+    -effect: EffectImplementor
+    +use(target: CombatNode, power: int)
+}
+
+class SingleTargetSkill
+class AreaSkill
+
+Skill <|-- SingleTargetSkill
+Skill <|-- AreaSkill
+
+Skill --> EffectImplementor : uses
+
+@enduml
