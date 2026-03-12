@@ -33,4 +33,47 @@ public abstract class BaseCharacter implements GameCharacter {
         if (armor != null)
             System.out.println("Armor: " + armor.getArmorInfo());
     }
+
+    // -------- ДОБАВЬ ЭТИ МЕТОДЫ --------
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getAttack() {
+        int weaponBonus = 0;
+
+        if (weapon != null) {
+            weaponBonus = 5; // можно сделать позже через weapon.getDamage()
+        }
+
+        return strength + weaponBonus;
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+
+        int armorReduction = 0;
+
+        if (armor != null) {
+            armorReduction = 3;
+        }
+
+        int finalDamage = damage - armorReduction;
+
+        if (finalDamage < 0)
+            finalDamage = 0;
+
+        health -= finalDamage;
+
+        if (health < 0)
+            health = 0;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return health > 0;
+    }
 }

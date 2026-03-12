@@ -9,4 +9,13 @@ public interface GameCharacter {
     void useSpecialAbility();
 
     void equip(EquipmentFactory factory);
+
+    // --- методы для боевой системы ---
+    String getName();
+
+    int getAttack();
+
+    void takeDamage(int damage);
+
+    boolean isAlive();
 }
