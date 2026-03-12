@@ -61,7 +61,7 @@ public class RaidGroup implements CombatNode {
 
     @Override
     public void printTree(String indent) {
-    
+
         System.out.println(indent + "RaidGroup:");
 
         for(CombatNode node : groups){
