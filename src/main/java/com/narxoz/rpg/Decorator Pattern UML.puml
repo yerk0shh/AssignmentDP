@@ -1,0 +1,44 @@
+@startuml
+title Decorator Pattern - Attack System
+
+interface AttackAction {
+    +execute() : int
+    +getDescription() : String
+}
+
+class BasicAttack {
+    +execute() : int
+    +getDescription() : String
+}
+
+abstract class ActionDecorator {
+    -wrappedAction : AttackAction
+    +execute() : int
+    +getDescription() : String
+}
+
+class FireRuneDecorator {
+    +execute() : int
+    +getDescription() : String
+}
+
+class PoisonCoatingDecorator {
+    +execute() : int
+    +getDescription() : String
+}
+
+class CriticalFocusDecorator {
+    +execute() : int
+    +getDescription() : String
+}
+
+AttackAction <|.. BasicAttack
+AttackAction <|.. ActionDecorator
+
+ActionDecorator o-- AttackAction : wraps
+
+ActionDecorator <|-- FireRuneDecorator
+ActionDecorator <|-- PoisonCoatingDecorator
+ActionDecorator <|-- CriticalFocusDecorator
+
+@enduml

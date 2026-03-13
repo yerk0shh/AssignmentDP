@@ -1,0 +1,44 @@
+@startuml
+title Facade Pattern - Dungeon Run
+
+class Main
+
+class DungeonFacade {
+    -preparationService : PreparationService
+    -battleService : BattleService
+    -rewardService : RewardService
+    +runDungeon(hero, enemy) : AdventureResult
+}
+
+class PreparationService {
+    +prepareHero(hero)
+}
+
+class BattleService {
+    +startBattle(hero, enemy) : boolean
+}
+
+class RewardService {
+    +grantRewards(hero, heroWon) : AdventureResult
+}
+
+class AdventureResult {
+    -heroWon : boolean
+    -gold : int
+}
+
+class Hero
+class Enemy
+
+Main --> DungeonFacade : uses
+
+DungeonFacade --> PreparationService
+DungeonFacade --> BattleService
+DungeonFacade --> RewardService
+
+BattleService --> Hero
+BattleService --> Enemy
+
+RewardService --> AdventureResult
+
+@enduml

@@ -2,6 +2,14 @@ package com.narxoz.rpg.enemy;
 
 public class BasicEnemy extends AbstractEnemy {
 
+    public BasicEnemy() {
+    }
+
+    public BasicEnemy(String name, int health) {
+        this.name = name;
+        this.health = health;
+    }
+
     @Override
     public Enemy clone() {
         BasicEnemy copy = new BasicEnemy();
