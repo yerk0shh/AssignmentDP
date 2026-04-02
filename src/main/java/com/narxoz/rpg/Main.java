@@ -45,9 +45,9 @@ public class Main {
 
         //Create enemy
         BasicEnemy boss = new BasicEnemy("Dragon", 120);
-        boss.setDamage(12);
-        boss.setHealth(5);
-        boss.setSpeed(3);
+        boss.setDamage(30);
+        boss.setHealth(150);
+        boss.setSpeed(15);
         //Run dungeon through Facade
         DungeonFacade dungeon = new DungeonFacade();
         AdventureResult result = dungeon.runDungeon(hero, boss);
