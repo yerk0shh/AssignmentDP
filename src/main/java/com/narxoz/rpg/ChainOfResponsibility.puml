@@ -1,0 +1,48 @@
+@startuml
+title Chain of Responsibility - Defense System
+
+abstract class DefenseHandler {
+    -next : DefenseHandler
+    +setNext(handler) : DefenseHandler
+    +handle(damage : int, target : ArenaFighter)
+    #passToNext(damage : int, target : ArenaFighter)
+}
+
+class DodgeHandler {
+    -dodgeChance : double
+    +handle(damage, target)
+}
+
+class BlockHandler {
+    -blockPercent : double
+    +handle(damage, target)
+}
+
+class ArmorHandler {
+    -armor : int
+    +handle(damage, target)
+}
+
+class HpHandler {
+    +handle(damage, target)
+}
+
+class ArenaFighter
+class TournamentEngine
+
+' Наследование
+DefenseHandler <|-- DodgeHandler
+DefenseHandler <|-- BlockHandler
+DefenseHandler <|-- ArmorHandler
+DefenseHandler <|-- HpHandler
+
+' Цепочка
+DefenseHandler --> DefenseHandler : next
+
+' Конечный получатель
+HpHandler --> ArenaFighter : apply damage
+
+' Integration
+TournamentEngine --> DefenseHandler : builds chain
+
+@enduml

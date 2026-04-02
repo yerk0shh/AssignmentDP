@@ -1,0 +1,64 @@
+@startuml
+title Command Pattern - RPG Arena
+
+interface ActionCommand {
+    +execute()
+    +undo()
+    +getDescription() : String
+}
+
+class AttackCommand {
+    -opponent : ArenaOpponent
+    -attackPower : int
+    -damageDealt : int
+    +execute()
+    +undo()
+    +getDescription() : String
+}
+
+class HealCommand {
+    -fighter : ArenaFighter
+    -healAmount : int
+    -actualHeal : int
+    +execute()
+    +undo()
+    +getDescription() : String
+}
+
+class DefendCommand {
+    -fighter : ArenaFighter
+    -boost : double
+    +execute()
+    +undo()
+    +getDescription() : String
+}
+
+class ActionQueue {
+    -queue : List<ActionCommand>
+    +enqueue(cmd)
+    +undoLast()
+    +executeAll()
+    +getCommandDescriptions() : List<String>
+}
+
+class ArenaFighter
+class ArenaOpponent
+class TournamentEngine
+
+' Реализация интерфейса
+ActionCommand <|.. AttackCommand
+ActionCommand <|.. HealCommand
+ActionCommand <|.. DefendCommand
+
+' Invoker
+ActionQueue --> ActionCommand : executes
+
+' Receivers
+AttackCommand --> ArenaOpponent
+HealCommand --> ArenaFighter
+DefendCommand --> ArenaFighter
+
+' Integration
+TournamentEngine --> ActionQueue
+
+@enduml

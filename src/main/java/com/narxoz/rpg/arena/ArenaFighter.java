@@ -18,22 +18,16 @@ public class ArenaFighter {
         this.armor = armor;
     }
 
-    // --- БОЙ ---
     public void takeDamage(int damage) {
         hp = Math.max(0, hp - damage);
-        System.out.println("Hero takes " + damage + " damage. HP: " + hp);
     }
 
     public int heal(int amount) {
         int before = hp;
         hp = Math.min(maxHp, hp + amount);
-        int healed = hp - before;
-
-        System.out.println("Hero heals " + healed + ". HP: " + hp);
-        return healed;
+        return hp - before;
     }
 
-    // --- DEFENSE ---
     public void increaseDodge(double boost) {
         dodgeChance += boost;
     }
@@ -42,7 +36,6 @@ public class ArenaFighter {
         dodgeChance -= boost;
     }
 
-    // --- GETTERS ---
     public int getHp() { return hp; }
     public int getAttackPower() { return attackPower; }
     public double getDodgeChance() { return dodgeChance; }

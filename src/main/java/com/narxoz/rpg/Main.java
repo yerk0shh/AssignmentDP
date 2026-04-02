@@ -9,6 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // === COMMAND DEMO ===
         System.out.println("=== COMMAND DEMO ===");
 
         ArenaFighter hero = new ArenaFighter(100, 20, 0.2, 30, 5);
@@ -20,49 +21,41 @@ public class Main {
         queue.enqueue(new HealCommand(hero, 15));
         queue.enqueue(new DefendCommand(hero, 0.2));
 
-        System.out.println("Queue before undo:");
-        System.out.println(queue.getCommandDescriptions());
+        System.out.println("Before undo: " + queue.getCommandDescriptions());
 
         queue.undoLast();
 
-        System.out.println("Queue after undo:");
-        System.out.println(queue.getCommandDescriptions());
+        System.out.println("After undo: " + queue.getCommandDescriptions());
 
-        System.out.println("Executing commands...");
         queue.executeAll();
 
-        System.out.println("\n=== CHAIN OF RESPONSIBILITY DEMO ===");
-
-        System.out.println("Hero HP before attack: " + hero.getHp());
+        // === CHAIN DEMO ===
+        System.out.println("\n=== CHAIN DEMO ===");
 
         DefenseHandler chain = new DodgeHandler(hero.getDodgeChance());
         chain.setNext(new BlockHandler(hero.getBlockRating() / 100.0))
                 .setNext(new ArmorHandler(hero.getArmor()))
                 .setNext(new HpHandler());
 
-        int incomingDamage = 50;
-        System.out.println("Incoming damage: " + incomingDamage);
+        System.out.println("HP before: " + hero.getHp());
+        chain.handle(50, hero);
+        System.out.println("HP after: " + hero.getHp());
 
-        chain.handle(incomingDamage, hero);
+        // === TOURNAMENT ===
+        System.out.println("\n=== TOURNAMENT ===");
 
-        System.out.println("Hero HP after defense: " + hero.getHp());
-
-        System.out.println("\n=== TOURNAMENT DEMO ===");
-
-        // New HERO and ENEMY
-        ArenaFighter tournamentHero = new ArenaFighter(100, 20, 0.2, 30, 5);
-        ArenaOpponent tournamentEnemy = new ArenaOpponent(80, 15);
+        ArenaFighter tHero = new ArenaFighter(100, 20, 0.2, 30, 5);
+        ArenaOpponent tEnemy = new ArenaOpponent(80, 15);
 
         TournamentEngine engine = new TournamentEngine();
-        TournamentResult result = engine.runTournament(tournamentHero, tournamentEnemy);
+        TournamentResult result = engine.runTournament(tHero, tEnemy);
 
         System.out.println("Winner: " + result.getWinner());
         System.out.println("Rounds: " + result.getRounds());
 
-        System.out.println("=== LOG ===");
-        for (String log : result.getLog()) {
-            System.out.println(log);
+        System.out.println("--- LOG ---");
+        for (String s : result.getLog()) {
+            System.out.println(s);
         }
-
     }
 }
