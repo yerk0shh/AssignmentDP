@@ -16,23 +16,29 @@ public class TournamentEngine {
         chain.setNext(new BlockHandler(hero.getBlockRating() / 100.0))
                 .setNext(new ArmorHandler(hero.getArmor()))
                 .setNext(new HpHandler());
-
+        
         int rounds = 0;
         int maxRounds = 50;
 
         while (hero.isAlive() && opponent.isAlive() && rounds < maxRounds) {
             rounds++;
+            log.add("Round " + rounds);
 
             ActionQueue queue = new ActionQueue();
 
             queue.enqueue(new AttackCommand(opponent, hero.getAttackPower()));
             queue.enqueue(new HealCommand(hero, 10));
-            queue.enqueue(new DefendCommand(hero, 0.1));
+
+            log.add("Hero executes actions");
 
             queue.executeAll();
 
+            log.add("Enemy HP: " + opponent.getHp());
+
             if (opponent.isAlive()) {
                 chain.handle(opponent.getAttackPower(), hero);
+                log.add("Hero HP after attack: " + hero.getHp());
+
             }
         }
 
