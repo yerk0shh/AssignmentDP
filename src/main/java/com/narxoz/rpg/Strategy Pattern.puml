@@ -1,0 +1,48 @@
+@startuml
+title Strategy Pattern - Combat System
+
+interface CombatStrategy {
+    +calculateDamage(basePower : int) : int
+    +calculateDefense(baseDefense : int) : int
+    +getName() : String
+}
+
+class BalancedStrategy
+class AggressiveStrategy
+class DefensiveStrategy
+
+class BossPhase1Strategy
+class BossPhase2Strategy
+class BossPhase3Strategy
+
+class Hero {
+    -name : String
+    -hp : int
+    -attack : int
+    -defense : int
+    -strategy : CombatStrategy
+    +attack() : int
+    +takeDamage(dmg : int)
+    +setStrategy(strategy : CombatStrategy)
+}
+
+class DungeonBoss {
+    -hp : int
+    -phase : int
+    -strategy : CombatStrategy
+    +attack() : int
+    +takeDamage(dmg : int)
+}
+
+CombatStrategy <|.. BalancedStrategy
+CombatStrategy <|.. AggressiveStrategy
+CombatStrategy <|.. DefensiveStrategy
+
+CombatStrategy <|.. BossPhase1Strategy
+CombatStrategy <|.. BossPhase2Strategy
+CombatStrategy <|.. BossPhase3Strategy
+
+Hero --> CombatStrategy
+DungeonBoss --> CombatStrategy
+
+@enduml

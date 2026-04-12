@@ -1,61 +1,51 @@
 package com.narxoz.rpg;
 
-import com.narxoz.rpg.arena.*;
-import com.narxoz.rpg.command.*;
-import com.narxoz.rpg.chain.*;
-import com.narxoz.rpg.tournament.*;
+import com.narxoz.rpg.engine.EncounterResult;
+import com.narxoz.rpg.strategy.*;
+import com.narxoz.rpg.observer.*;
+import com.narxoz.rpg.combatant.*;
+import com.narxoz.rpg.engine.*;
+
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        // === COMMAND DEMO ===
-        System.out.println("=== COMMAND DEMO ===");
+        // Event system
+        EventManager manager = new EventManager();
 
-        ArenaFighter hero = new ArenaFighter(100, 20, 0.2, 30, 5);
-        ArenaOpponent enemy = new ArenaOpponent(80, 15);
+        manager.subscribe(new BattleLogger());
+        manager.subscribe(new AchievementTracker());
+        manager.subscribe(new PartySupport());
+        manager.subscribe(new HeroStatusMonitor());
+        manager.subscribe(new LootDropper());
 
-        ActionQueue queue = new ActionQueue();
+        // Boss
+        DungeonBoss boss = new DungeonBoss(500, 50, 20);
+        manager.subscribe(boss);
 
-        queue.enqueue(new AttackCommand(enemy, hero.getAttackPower()));
-        queue.enqueue(new HealCommand(hero, 15));
-        queue.enqueue(new DefendCommand(hero, 0.2));
+        // Heroes
+        Hero knight = new Hero("Knight", 200, 40, 25, new DefensiveStrategy());
+        Hero archer = new Hero("Archer", 150, 50, 10, new AggressiveStrategy());
+        Hero mage = new Hero("Mage", 130, 60, 8, new BalancedStrategy());
 
-        System.out.println("Before undo: " + queue.getCommandDescriptions());
+        List<Hero> heroes = Arrays.asList(knight, archer, mage);
 
-        queue.undoLast();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                archer.setStrategy(new DefensiveStrategy());
+            }
+        }, 3000);
 
-        System.out.println("After undo: " + queue.getCommandDescriptions());
+        // Запуск боя
+        DungeonEngine engine = new DungeonEngine();
+        EncounterResult result = engine.run(heroes, boss, manager);
 
-        queue.executeAll();
-
-        // === CHAIN DEMO ===
-        System.out.println("\n=== CHAIN DEMO ===");
-
-        DefenseHandler chain = new DodgeHandler(hero.getDodgeChance());
-        chain.setNext(new BlockHandler(hero.getBlockRating() / 100.0))
-                .setNext(new ArmorHandler(hero.getArmor()))
-                .setNext(new HpHandler());
-
-        System.out.println("HP before: " + hero.getHp());
-        chain.handle(50, hero);
-        System.out.println("HP after: " + hero.getHp());
-
-        // === TOURNAMENT ===
-        System.out.println("\n=== TOURNAMENT ===");
-
-        ArenaFighter tHero = new ArenaFighter(100, 20, 0.2, 30, 5);
-        ArenaOpponent tEnemy = new ArenaOpponent(80, 15);
-
-        TournamentEngine engine = new TournamentEngine();
-        TournamentResult result = engine.runTournament(tHero, tEnemy);
-
-        System.out.println("Winner: " + result.getWinner());
+        // Итог
+        System.out.println("\n=== RESULT ===");
+        System.out.println("Boss defeated: " + result.isBossDefeated());
         System.out.println("Rounds: " + result.getRounds());
-
-        System.out.println("--- LOG ---");
-        for (String s : result.getLog()) {
-            System.out.println(s);
-        }
     }
 }

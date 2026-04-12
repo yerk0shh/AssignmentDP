@@ -1,0 +1,48 @@
+@startuml
+title Observer Pattern - Event System
+
+class GameEvent {
+    -type : GameEventType
+    -sourceName : String
+    -value : int
+}
+
+enum GameEventType {
+    ATTACK_LANDED
+    HERO_LOW_HP
+    HERO_DIED
+    BOSS_PHASE_CHANGED
+    BOSS_DEFEATED
+}
+
+interface GameObserver {
+    +onEvent(event : GameEvent)
+}
+
+class EventManager {
+    -observers : List<GameObserver>
+    +subscribe(observer : GameObserver)
+    +notify(event : GameEvent)
+}
+
+class BattleLogger
+class AchievementTracker
+class PartySupport
+class HeroStatusMonitor
+class LootDropper
+
+class DungeonBoss
+
+GameObserver <|.. BattleLogger
+GameObserver <|.. AchievementTracker
+GameObserver <|.. PartySupport
+GameObserver <|.. HeroStatusMonitor
+GameObserver <|.. LootDropper
+GameObserver <|.. DungeonBoss
+
+EventManager --> GameObserver
+EventManager --> GameEvent
+
+DungeonBoss --> GameEvent
+
+@enduml
