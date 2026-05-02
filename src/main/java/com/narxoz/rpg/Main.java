@@ -1,33 +1,52 @@
 package com.narxoz.rpg;
 
-import com.narxoz.rpg.artifact.*;
 import com.narxoz.rpg.combatant.Hero;
-import com.narxoz.rpg.vault.ChronomancerEngine;
-import com.narxoz.rpg.vault.VaultRunResult;
+import com.narxoz.rpg.council.CouncilEngine;
+import com.narxoz.rpg.council.CouncilRunResult;
+import com.narxoz.rpg.guild.Captain;
+import com.narxoz.rpg.guild.GuildHall;
+import com.narxoz.rpg.guild.Healer;
+import com.narxoz.rpg.guild.Loremaster;
+import com.narxoz.rpg.guild.Quartermaster;
+import com.narxoz.rpg.guild.Scout;
+import com.narxoz.rpg.quest.Quest;
+import com.narxoz.rpg.quest.QuestLog;
+import com.narxoz.rpg.quest.QuestPriority;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Inventory inventory = new Inventory();
+        Hero warrior = new Hero("Aldar", 130, 45, 210);
+        Hero mage = new Hero("Mira", 80, 150, 95);
+        List<Hero> heroes = Arrays.asList(warrior, mage);
 
-        inventory.add(new Weapon("Hourglass Blade", 32, 120, 6.5, 18));
-        inventory.add(new Potion("Dawn Potion", 8, 35, 0.7, 45));
-        inventory.add(new Scroll("Shadow Recall Scroll", 28, 90, 0.2, "Shadow Recall"));
-        inventory.add(new Ring("Ring of Greed", 22, 150, 0.1, "Greed and gold sense"));
-        inventory.add(new Armor("Chrono Plate", 18, 110, 18.0, 25));
+        QuestLog questLog = new QuestLog();
+        questLog.add(new Quest("Clear the Spider Mine", QuestPriority.NORMAL, 120, "Iron Hills"));
+        questLog.add(new Quest("Escort the Moon Caravan", QuestPriority.LOW, 80, "Silver Road"));
+        questLog.add(new Quest("Break the Bone Shrine Curse", QuestPriority.HIGH, 260, "Old Marsh"));
+        questLog.add(new Quest("Defend the Burning Gate", QuestPriority.URGENT, 400, "East Wall"));
+        questLog.add(new Quest("Recover the Lost Banner", QuestPriority.NORMAL, 160, "Storm Field"));
 
-        Hero knight = new Hero("Aldar", 120, 80, 200);
-        Hero mage = new Hero("Mira", 75, 140, 90);
+        GuildHall guildHall = new GuildHall();
 
-        knight.addArtifact(new Potion("Personal Minor Potion", 3, 10, 0.3, 15));
-        mage.addArtifact(new Scroll("Spark Note", 5, 20, 0.1, "Spark"));
+        Quartermaster quartermaster = new Quartermaster("Borin", guildHall);
+        Scout scout = new Scout("Nyra", guildHall);
+        Healer healer = new Healer("Selene", guildHall);
+        Captain captain = new Captain("Darius", guildHall);
+        Loremaster loremaster = new Loremaster("Ilyas", guildHall);
 
-        List<Hero> heroes = Arrays.asList(knight, mage);
-
-        ChronomancerEngine engine = new ChronomancerEngine();
-        VaultRunResult result = engine.run(heroes, inventory);
+        CouncilEngine engine = new CouncilEngine();
+        CouncilRunResult result = engine.runCouncil(
+                heroes,
+                questLog,
+                quartermaster,
+                scout,
+                healer,
+                captain,
+                loremaster
+        );
 
         System.out.println("\n=== Final result ===");
         System.out.println(result);

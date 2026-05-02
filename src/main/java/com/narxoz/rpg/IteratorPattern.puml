@@ -1,0 +1,28 @@
+@startuml
+interface QuestIterator
+class QuestLog
+class Quest
+enum QuestPriority
+class OrderedQuestIterator
+class ReverseQuestIterator
+class PriorityQuestIterator
+class RewardSortedQuestIterator
+
+QuestLog o-- Quest
+Quest --> QuestPriority
+
+QuestIterator <|.. OrderedQuestIterator
+QuestIterator <|.. ReverseQuestIterator
+QuestIterator <|.. PriorityQuestIterator
+QuestIterator <|.. RewardSortedQuestIterator
+
+QuestLog : ordered()
+QuestLog : reverse()
+QuestLog : priorityAtLeast(priority)
+QuestLog : rewardSorted()
+
+OrderedQuestIterator ..> QuestLog
+ReverseQuestIterator ..> QuestLog
+PriorityQuestIterator ..> QuestLog
+RewardSortedQuestIterator ..> QuestLog
+@enduml
