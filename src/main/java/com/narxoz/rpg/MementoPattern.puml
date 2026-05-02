@@ -1,0 +1,19 @@
+@startuml
+class Hero
+class HeroMemento
+class Caretaker
+class ChronomancerEngine
+
+Hero : createMemento()
+Hero : restoreFromMemento(HeroMemento)
+
+Caretaker : save(HeroMemento)
+Caretaker : undo()
+Caretaker : peek()
+Caretaker : size()
+
+Hero ..> HeroMemento
+Caretaker o-- HeroMemento
+ChronomancerEngine ..> Hero
+ChronomancerEngine ..> Caretaker
+@enduml

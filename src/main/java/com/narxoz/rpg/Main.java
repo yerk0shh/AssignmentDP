@@ -1,51 +1,35 @@
 package com.narxoz.rpg;
 
-import com.narxoz.rpg.engine.EncounterResult;
-import com.narxoz.rpg.strategy.*;
-import com.narxoz.rpg.observer.*;
-import com.narxoz.rpg.combatant.*;
-import com.narxoz.rpg.engine.*;
+import com.narxoz.rpg.artifact.*;
+import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.vault.ChronomancerEngine;
+import com.narxoz.rpg.vault.VaultRunResult;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) {
+        Inventory inventory = new Inventory();
 
-        // Event system
-        EventManager manager = new EventManager();
+        inventory.add(new Weapon("Hourglass Blade", 32, 120, 6.5, 18));
+        inventory.add(new Potion("Dawn Potion", 8, 35, 0.7, 45));
+        inventory.add(new Scroll("Shadow Recall Scroll", 28, 90, 0.2, "Shadow Recall"));
+        inventory.add(new Ring("Ring of Greed", 22, 150, 0.1, "Greed and gold sense"));
+        inventory.add(new Armor("Chrono Plate", 18, 110, 18.0, 25));
 
-        manager.subscribe(new BattleLogger());
-        manager.subscribe(new AchievementTracker());
-        manager.subscribe(new PartySupport());
-        manager.subscribe(new HeroStatusMonitor());
-        manager.subscribe(new LootDropper());
+        Hero knight = new Hero("Aldar", 120, 80, 200);
+        Hero mage = new Hero("Mira", 75, 140, 90);
 
-        // Boss
-        DungeonBoss boss = new DungeonBoss(500, 50, 20);
-        manager.subscribe(boss);
+        knight.addArtifact(new Potion("Personal Minor Potion", 3, 10, 0.3, 15));
+        mage.addArtifact(new Scroll("Spark Note", 5, 20, 0.1, "Spark"));
 
-        // Heroes
-        Hero knight = new Hero("Knight", 200, 40, 25, new DefensiveStrategy());
-        Hero archer = new Hero("Archer", 150, 50, 10, new AggressiveStrategy());
-        Hero mage = new Hero("Mage", 130, 60, 8, new BalancedStrategy());
+        List<Hero> heroes = Arrays.asList(knight, mage);
 
-        List<Hero> heroes = Arrays.asList(knight, archer, mage);
+        ChronomancerEngine engine = new ChronomancerEngine();
+        VaultRunResult result = engine.run(heroes, inventory);
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                archer.setStrategy(new DefensiveStrategy());
-            }
-        }, 3000);
-
-        // Запуск боя
-        DungeonEngine engine = new DungeonEngine();
-        EncounterResult result = engine.run(heroes, boss, manager);
-
-        // Итог
-        System.out.println("\n=== RESULT ===");
-        System.out.println("Boss defeated: " + result.isBossDefeated());
-        System.out.println("Rounds: " + result.getRounds());
+        System.out.println("\n=== Final result ===");
+        System.out.println(result);
     }
 }

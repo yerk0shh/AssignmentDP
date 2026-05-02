@@ -1,0 +1,28 @@
+@startuml
+interface ArtifactVisitor
+abstract class Artifact
+class Weapon
+class Potion
+class Scroll
+class Ring
+class Armor
+class Inventory
+
+Artifact <|-- Weapon
+Artifact <|-- Potion
+Artifact <|-- Scroll
+Artifact <|-- Ring
+Artifact <|-- Armor
+
+ArtifactVisitor : visit(Weapon)
+ArtifactVisitor : visit(Potion)
+ArtifactVisitor : visit(Scroll)
+ArtifactVisitor : visit(Ring)
+ArtifactVisitor : visit(Armor)
+
+Artifact : accept(ArtifactVisitor)
+Inventory : accept(ArtifactVisitor)
+
+Inventory o-- Artifact
+Artifact ..> ArtifactVisitor
+@enduml
